@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from scipy.stats import norm
+from scipy.stats import t
 
 
 chat_id = 123456 # Ваш chat ID, не меняйте название переменной
@@ -11,7 +11,9 @@ def solution(p: float, x: np.array) -> tuple:
     # Это будет вашим решением
     # Не меняйте название функции и её аргументы
     alpha = 1 - p
-    loc = x.mean()
-    scale = np.sqrt(np.var(x)) / np.sqrt(len(x))
-    return loc - scale * norm.ppf(1 - alpha / 2), \
-           loc - scale * norm.ppf(alpha / 2)
+    n = len(x)
+    t_alpha_2 = t.ppf(1-alpha / 2, n - 1)
+    x_mean = x.mean()
+    s = np.sqrt(np.var(x))
+    interval = (x_mean - t_alpha_2 * s / np.sqrt(n), x_mean + t_alpha_2 * s / np.sqrt(n))
+    return interval
